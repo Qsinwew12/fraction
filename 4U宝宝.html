@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐼 4M Panda Paradise</title>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+/* ==============================   🎨 CSS: 3D 视觉核心样式   ============================== */
+:root {
+  --panda-black: #2c3e50;
+  --bamboo-light: #dcedc8;
+  --bamboo-dark: #7cb342;
+  --cute-pink: #ff8a80;
+  --cute-blue: #80deea;
+  --cute-purple: #ce93d8;
+  --cute-yellow: #fff59d;
+  --bg-color: #f1f8e9;
+}
+body {
+  margin: 0;
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  background-color: var(--bg-color);
+  background-image:
+    linear-gradient(rgba(124, 179, 66, 0.2) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(124, 179, 66, 0.2) 2px, transparent 2px);
+  background-size: 40px 40px;
+  min-height: 100vh;
+  color: var(--panda-black);
+  padding-bottom: 120px; /* 增加底部空间，防止被吉祥物挡住 */
+  user-select: none;
+}
+/* ====================   🎮 3D 按钮样式   ==================== */
+button {
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  cursor: pointer;
+  border-radius: 15px;
+  position: relative;
+  transition: all 0.1s;
+  color: var(--panda-black);
+  background: white;
+  margin: 5px;
+  box-shadow: 0 6px 0 var(--panda-black), 0 12px 10px rgba(0,0,0,0.2);
+  transform: translateY(0);
+}
+button:hover { transform: translateY(-2px); box-shadow: 0 8px 0 var(--panda-black), 0 15px 15px rgba(0,0,0,0.2); }
+button:active, .nav-btn.active-btn { transform: translateY(6px); box-shadow: 0 0 0 var(--panda-black), inset 0 2px 5px rgba(0,0,0,0.2); }
+
+/* 按钮颜色 */
+.btn-primary { background: var(--cute-blue); color: #006064; box-shadow: 0 6px 0 #0097a7, 0 12px 10px rgba(0,0,0,0.2); }
+.btn-primary:active { box-shadow: 0 0 0 #0097a7, inset 0 2px 5px rgba(0,0,0,0.2); }
+.btn-danger { background: var(--cute-pink); color: white; box-shadow: 0 6px 0 #d32f2f, 0 12px 10px rgba(0,0,0,0.2); }
+.btn-danger:active { box-shadow: 0 0 0 #d32f2f, inset 0 2px 5px rgba(0,0,0,0.2); }
+.btn-success { background: var(--bamboo-dark); color: white; box-shadow: 0 6px 0 #33691e, 0 12px 10px rgba(0,0,0,0.2); }
+.btn-success:active { box-shadow: 0 0 0 #33691e, inset 0 2px 5px rgba(0,0,0,0.2); }
+.btn-purple { background: var(--cute-purple); color: white; box-shadow: 0 6px 0 #8e24aa, 0 12px 10px rgba(0,0,0,0.2); }
+.btn-purple:active { box-shadow: 0 0 0 #8e24aa, inset 0 2px 5px rgba(0,0,0,0.2); }
+.nav-btn.active-btn { background: var(--panda-black); color: white; }
+
+/* ====================   📦 容器与卡片   ==================== */
+.nav-bar {
+  display: flex; justify-content: center; gap: 10px; padding: 20px;
+  background: white; border-radius: 25px;
+  width: 90%; max-width: 1000px; margin: 20px auto; flex-wrap: wrap;
+  border: 2px solid #eee;
+  box-shadow: 0 10px 0 #dcdcdc, 0 20px 20px rgba(0,0,0,0.15);
+}
+.cute-box {
+  background: white; border-radius: 30px;
+  padding: 30px; text-align: center; width: 90%; max-width: 700px; margin-top: 15px;
+  border: 4px solid var(--panda-black); border-bottom-width: 8px;
+  box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+}
+.group-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 95%; }
+.group-card {
+  background: white; border-radius: 20px; padding: 15px;
+  position: relative; transition: 0.3s;
+  border: 3px solid var(--panda-black);
+  box-shadow: 6px 6px 0 var(--panda-black);
+}
+.group-card:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--panda-black); }
+.group-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  background: var(--bamboo-light); padding: 10px; border-radius: 15px;
+  border: 2px solid var(--bamboo-dark);
+}
+.group-badge-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid white; background: white;}
+.student-item { display: flex; align-items: center; margin: 8px 0; font-size: 18px; border-bottom: 2px dashed #eee; padding-bottom: 6px; }
+.stu-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 12px; border: 2px solid var(--panda-black); object-fit: cover; background: #f0f0f0; }
+
+input, select {
+  border: 3px solid var(--panda-black); border-radius: 15px;
+  padding: 10px; font-family: 'ZCOOL KuaiLe', sans-serif; font-size: 16px;
+  background: #f9f9f9; outline: none; box-shadow: inset 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* ====================   🐾 吉祥物   ==================== */
+.mascot-container {
+    position: fixed; bottom: 10px; left: 20px; width: 140px; z-index: 8000; cursor: pointer;
+    transition: transform 0.3s; animation: floatMascot 4s ease-in-out infinite;
+    filter: drop-shadow(0 15px 10px rgba(0,0,0,0.3));
+}
+.mascot-container:hover { transform: scale(1.1) translateY(-10px) rotate(5deg); }
+.mascot-container:active { transform: scale(0.95); }
+.mascot-container img { width: 100%; height: auto; }
+.mascot-bubble {
+    position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+    background: white; border: 3px solid var(--panda-black); padding: 12px 18px;
+    border-radius: 20px; font-size: 15px; font-weight: bold; color: var(--panda-black);
+    white-space: nowrap; opacity: 0; visibility: hidden; transition: 0.3s;
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
+}
+.mascot-bubble.show { opacity: 1; visibility: visible; bottom: 125%; }
+.mascot-bubble::after {
+    content: ''; position: absolute; bottom: -10px; left: 50%; margin-left: -8px;
+    border-width: 10px 8px 0; border-style: solid;
+    border-color: var(--panda-black) transparent transparent;
+}
+@keyframes floatMascot { 0% { transform: translateY(0); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0); } }
+
+.page { display: none; width: 100%; max-width: 1200px; margin: 0 auto; flex-direction: column; align-items: center; }
+.page.active { display: flex; animation: popIn 0.5s; }
+@keyframes popIn { from{opacity:0; transform:scale(0.8) translateY(20px);} to{opacity:1; transform:scale(1) translateY(0);} }
+
+.race-lane {
+  position: relative; height: 70px; border-bottom: 4px solid rgba(0,0,0,0.1); margin-bottom: 10px;
+  background: rgba(255,255,255,0.4); border-radius: 10px; display: flex; align-items: center;
+}
+.racer-icon {
+  position: absolute; left: 0; width: 60px; height: 60px; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+}
+.racer-img { width: 50px; height: 50px; border-radius: 50%; border: 3px solid white; object-fit: cover; background: white;}
+
+#winnerPage {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(44, 62, 80, 0.9); z-index: 9000; backdrop-filter: blur(5px);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+}
+
+/* 顶部悬浮按钮组 */
+.top-btns {
+    position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; gap: 10px;
+}
+.float-btn {
+  background: white; padding: 10px 15px; font-family: 'ZCOOL KuaiLe', sans-serif; font-size: 16px; cursor: pointer;
+  border-radius: 50px; border: 3px solid var(--panda-black);
+  box-shadow: 0 4px 0 var(--panda-black); transition: 0.2s;
+}
+.float-btn:active { transform: translateY(4px); box-shadow: 0 0 0; }
+.music-playing { background: var(--cute-pink); color: white; animation: beat 1s infinite; }
+.lang-active { background: var(--cute-blue); color: #006064; }
+
+@keyframes beat { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+
+.cam-tabs { display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.05); padding: 10px; border-radius: 50px; }
+.cam-tab { border-radius: 20px; margin: 0; background: transparent; box-shadow: none; opacity: 0.6; }
+.cam-tab.active-tab { opacity: 1; background: white; box-shadow: 0 4px 0 rgba(0,0,0,0.1); font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="top-btns">
+    <button id="langBtn" class="float-btn" onclick="toggleLang()">🌐 中/EN</button>
+    <button id="musicBtn" class="float-btn" onclick="toggleMusic()">🔇</button>
+</div>
+
+<div id="audio-container" style="display:none;">
+    <audio id="audio-bgm" loop><source src="bgm.mp3" type="audio/mpeg"></audio>
+    <audio id="audio-click"><source src="click.mp3" type="audio/mpeg"></audio>
+    <audio id="audio-win"><source src="win.mp3" type="audio/mpeg"></audio>
+    <audio id="audio-race"><source src="race.mp3" type="audio/mpeg"></audio>
+</div>
+
+<header style="text-align:center; padding:10px; color:var(--panda-black);">
+  <h1 style="margin:5px 0; font-size:36px;" id="mainTitle">🎋 4M 班级大本营 🎋</h1>
+</header>
+
+<div class="nav-bar">
+  <button class="nav-btn active-btn" onclick="showPage('home', this)" data-i18n="nav_home">🏠 班级展示</button>
+  <button class="nav-btn" onclick="showPage('duckRace', this)" data-i18n="nav_race">🏎️ 极速赛车</button>
+  <button class="nav-btn" onclick="showPage('draw', this)" data-i18n="nav_draw">🧧 幸运抽签</button>
+  <button class="nav-btn" onclick="showPage('catch', this)" data-i18n="nav_catch">🧸 抓娃娃</button>
+  <button class="nav-btn" onclick="showPage('camera', this)" data-i18n="nav_cam">📸 熊猫相机</button>
+  <button class="nav-btn btn-purple" onclick="showPage('dataCenter', this)" data-i18n="nav_data">💾 记忆中心</button>
+</div>
+
+<div id="home" class="page active">
+  <div style="margin-bottom:15px;">
+    <button class="btn-success" onclick="resetAll()" data-i18n="btn_revive">🔄 复活所有小组</button>
+  </div>
+  <div class="group-grid" id="groupView"></div>
+</div>
+
+<div id="dataCenter" class="page">
+  <div class="cute-box" style="border-color: var(--cute-purple);">
+    <h2 data-i18n="data_title">💾 记忆数据中心</h2>
+    <div style="background:#f3e5f5; padding:20px; border-radius:20px; margin-bottom:20px;">
+      <h3 data-i18n="export_title">📤 导出记忆</h3>
+      <p data-i18n="export_desc">保存当前所有的照片和设置到电脑。</p>
+      <button class="btn-primary" onclick="exportData()" data-i18n="btn_download">📦 下载文件 (.json)</button>
+    </div>
+    <div style="background:#e8f5e9; padding:20px; border-radius:20px;">
+      <h3 data-i18n="import_title">📥 读取记忆</h3>
+      <p data-i18n="import_desc">从电脑加载之前的备份文件。</p>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+      <button class="btn-success" onclick="document.getElementById('importFile').click()" data-i18n="btn_upload">📂 选择文件加载</button>
+    </div>
+  </div>
+  
+  <div class="cute-box" style="border-color: #ffb74d; background: #fff3e0; margin-top: 30px;">
+    <h3 data-i18n="mascot_title">🐾 班级吉祥物设置</h3>
+    <p data-i18n="mascot_desc">上传一张透明背景的图片，它会出现在屏幕角落哦！</p>
+    <div style="margin: 20px 0;">
+         <button class="btn-primary" onclick="document.getElementById('mascotInput').click()" data-i18n="btn_up_mascot">📂 上传吉祥物图片</button>
+         <button class="btn-danger" onclick="resetMascot()" data-i18n="btn_reset_mascot">🗑️ 恢复默认</button>
+    </div>
+    <input type="file" id="mascotInput" accept="image/*" style="display:none" onchange="uploadMascot(this)">
+    <div style="font-size:12px; color:#ef6c00;">* 支持 PNG/JPG/GIF</div>
+  </div>
+</div>
+
+<div id="camera" class="page">
+  <div class="cute-box">
+    <h2 data-i18n="cam_title">📸 熊猫影楼</h2>
+    <div class="cam-tabs">
+      <button class="cam-tab active-tab" onclick="switchCamMode('student')" id="tabStu" data-i18n="tab_stu">👤 学生个人照</button>
+      <button class="cam-tab" onclick="switchCamMode('group')" id="tabGrp" data-i18n="tab_grp">🛡️ 小组队徽</button>
+    </div>
+    
+    <div id="camModeStudent">
+      <p data-i18n="sel_stu">请选择一位同学：</p>
+      <select id="stuSelect" style="font-size:18px; padding:8px; border-radius:10px; width:80%;"></select>
+    </div>
+    
+    <div id="camModeGroup" style="display:none;">
+      <p data-i18n="sel_grp">请选择一个小组 (设置队徽)：</p>
+      <select id="grpSelect" style="font-size:18px; padding:8px; border-radius:10px; width:80%; color:blue; font-weight:bold;"></select>
+      <p style="font-size:14px; color:#666;" data-i18n="cam_hint">✨ 设置后，赛车和抽签将显示此图标！</p>
+    </div>
+    
+    <div style="background:#eee; padding:20px; border-radius:20px; margin:20px 0; border:2px dashed #999;">
+      <img id="imgPreview" style="width:120px; height:120px; object-fit:cover; border-radius:50%; background:white; border:4px solid white; box-shadow:0 5px 10px rgba(0,0,0,0.1);">
+      <br><br>
+      <button class="btn-primary" onclick="document.getElementById('fileInput').click()" data-i18n="btn_up_pic">📂 上传图片</button>
+      <input type="file" id="fileInput" accept="image/*" hidden onchange="handleFilePreview(this)">
+    </div>
+    <button class="btn-danger" style="width:100%; font-size:20px;" onclick="saveCurrentAvatar()" data-i18n="btn_save">💾 确认保存</button>
+    <p id="compressTip" style="color:#888; font-size:12px; margin-top:5px; display:none;" data-i18n="img_compressed">✨ 图片已压缩优化</p>
+  </div>
+</div>
+
+<div id="duckRace" class="page">
+  <div class="cute-box" style="width:95%; max-width:850px;">
+    <h2 data-i18n="race_title">🏁 4M 极速杯</h2>
+    <div style="width:100%; background:rgba(255,255,255,0.7); border-radius:20px; padding:10px; border:4px solid var(--bamboo-dark);" id="raceTrackArea"></div>
+    <br>
+    <button class="btn-success" style="font-size:24px; padding:10px 40px;" onclick="startRace()" data-i18n="btn_race_start">🚀 冲刺！</button>
+    <button class="btn-primary" onclick="renderRace()" data-i18n="btn_reset">⛽ 复位</button>
+  </div>
+</div>
+
+<div id="draw" class="page">
+  <div class="cute-box">
+    <h2 data-i18n="draw_title">🧧 幸运转盘</h2>
+    <div id="drawBox" style="height:150px; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+      <div id="drawIcon" style="font-size:80px;">❓</div>
+      <div id="drawText" style="font-size:40px; font-weight:bold; color:var(--cute-pink);">...</div>
+    </div>
+    <div id="drawMembers" style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; min-height:80px;"></div>
+    <br>
+    <button class="btn-primary" onclick="startDraw()" data-i18n="btn_start">🥁 开始</button>
+    <button class="btn-success" onclick="confirmExclude()" data-i18n="btn_pick">✅ 选中并剔除</button>
+  </div>
+</div>
+
+<div id="catch" class="page">
+  <div class="cute-box">
+    <h2 data-i18n="catch_title">🧸 抓娃娃</h2>
+    <div style="height:140px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <img id="catchPreview" style="width:100px; height:100px; border-radius:50%; border:5px solid gold; display:none;">
+      <div id="catchText" style="font-size:28px;" data-i18n="catch_insert">投入硬币...</div>
+    </div>
+    <div style="margin:10px 0;">
+      <span data-i18n="catch_count">抓取人数:</span> <input type="number" id="catchCount" value="1" min="1" max="5" style="width:50px; text-align:center;">
+      <button class="btn-danger" onclick="startCatch()" data-i18n="btn_catch">🎣 下爪！</button>
+      <button class="btn-primary" onclick="resetCatch()" data-i18n="btn_clear">🗑️ 重置</button>
+    </div>
+    <div id="catchResult" style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px;"></div>
+  </div>
+</div>
+
+<div id="winnerPage">
+  <div class="cute-box" style="border-color:gold; background:#fffde7;">
+    <div style="font-size:60px;">🏆</div>
+    <h1 id="winTitle" style="color:#f57f17;">...</h1>
+    <div id="winMembers" style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin:20px 0;"></div>
+    <button class="btn-danger" onclick="closeWinner(true)" data-i18n="btn_mark_done">🚫 标记完成</button>
+    <button class="btn-success" onclick="closeWinner(false)" data-i18n="btn_continue">↩️ 继续</button>
+  </div>
+</div>
+
+<div id="mascot-box" class="mascot-container" onclick="mascotTalk()">
+    <div id="mascot-bubble" class="mascot-bubble">...</div>
+    <img id="mascot-img" src="" alt="Mascot">
+</div>
+
+<script>
+// ==========================
+// 🌍 多语言系统 (i18n)
+// ==========================
+const translations = {
+    zh: {
+        title: "🎋 4M 班级大本营 🎋",
+        nav_home: "🏠 班级展示",
+        nav_race: "🏎️ 极速赛车",
+        nav_draw: "🧧 幸运抽签",
+        nav_catch: "🧸 抓娃娃",
+        nav_cam: "📸 熊猫相机",
+        nav_data: "💾 记忆中心",
+        btn_revive: "🔄 复活所有小组",
+        
+        data_title: "💾 记忆数据中心",
+        export_title: "📤 导出记忆",
+        export_desc: "保存当前所有的照片、设置和吉祥物。",
+        btn_download: "📦 下载文件 (.json)",
+        import_title: "📥 读取记忆",
+        import_desc: "从电脑加载之前的备份文件。",
+        btn_upload: "📂 选择文件加载",
+        mascot_title: "🐾 班级吉祥物设置",
+        mascot_desc: "上传一张透明背景的图片，它会出现在屏幕角落哦！",
+        btn_up_mascot: "📂 上传吉祥物图片",
+        btn_reset_mascot: "🗑️ 恢复默认",
+
+        cam_title: "📸 熊猫影楼",
+        tab_stu: "👤 学生个人照",
+        tab_grp: "🛡️ 小组队徽",
+        sel_stu: "请选择一位同学：",
+        sel_grp: "请选择一个小组 (设置队徽)：",
+        cam_hint: "✨ 设置后，赛车和抽签将显示此图标！",
+        btn_up_pic: "📂 上传图片",
+        btn_save: "💾 确认保存",
+        img_compressed: "✨ 图片已压缩优化",
+
+        race_title: "🏁 4M 极速杯",
+        btn_race_start: "🚀 冲刺！",
+        btn_reset: "⛽ 复位",
+        
+        draw_title: "🧧 幸运转盘",
+        draw_ready: "准备...",
+        btn_start: "🥁 开始",
+        btn_pick: "✅ 选中并剔除",
+
+        catch_title: "🧸 抓娃娃",
+        catch_insert: "投入硬币...",
+        catch_got: "抓到了！",
+        catch_count: "抓取人数:",
+        btn_catch: "🎣 下爪！",
+        btn_clear: "🗑️ 重置",
+
+        win_title: "🏆 {g} 获胜！",
+        winner_head: "冠军诞生！",
+        btn_mark_done: "🚫 标记完成",
+        btn_continue: "↩️ 继续",
+
+        alert_revive: "确定复活所有小组？",
+        alert_no_pic: "请先选择图片！",
+        alert_saved_stu: "✅ 同学 [{name}] 头像已保存！",
+        alert_saved_grp: "✅ 小组 [{name}] 队徽已保存！",
+        alert_race_few: "剩下的小组不够比赛了！",
+        alert_no_grp: "没有小组了！",
+        alert_mascot_ok: "✨ 吉祥物设置成功！",
+        alert_mascot_reset: "确定要变回默认的小熊猫吗？",
+        alert_data_ok: "✅ 数据恢复成功！",
+        alert_file_err: "文件格式不对！",
+        
+        "第一组": "第一组",
+        "第二组": "第二组",
+        "第三组": "第三组",
+        "第四组": "第四组",
+        "第五组": "第五组",
+        "组长": "组长"
+    },
+    en: {
+        title: "🎋 4M Class Hub 🎋",
+        nav_home: "🏠 Showcase",
+        nav_race: "🏎️ Turbo Race",
+        nav_draw: "🧧 Lucky Draw",
+        nav_catch: "🧸 Claw Machine",
+        nav_cam: "📸 Camera",
+        nav_data: "💾 Data Center",
+        btn_revive: "🔄 Revive All Groups",
+        
+        data_title: "💾 Data Memory Center",
+        export_title: "📤 Export Memory",
+        export_desc: "Save all photos, settings and Mascot.",
+        btn_download: "📦 Download (.json)",
+        import_title: "📥 Import Memory",
+        import_desc: "Load a backup file from your computer.",
+        btn_upload: "📂 Select File",
+        mascot_title: "🐾 Mascot Settings",
+        mascot_desc: "Upload a transparent image to appear in the corner!",
+        btn_up_mascot: "📂 Upload Image",
+        btn_reset_mascot: "🗑️ Reset Default",
+
+        cam_title: "📸 Panda Studio",
+        tab_stu: "👤 Student Photo",
+        tab_grp: "🛡️ Group Badge",
+        sel_stu: "Select a Student:",
+        sel_grp: "Select a Group (Badge):",
+        cam_hint: "✨ Used in Racing & Lucky Draw!",
+        btn_up_pic: "📂 Upload",
+        btn_save: "💾 Save",
+        img_compressed: "✨ Image Optimized",
+
+        race_title: "🏁 4M Speed Cup",
+        btn_race_start: "🚀 GO!",
+        btn_reset: "⛽ Reset",
+        
+        draw_title: "🧧 Lucky Wheel",
+        draw_ready: "Ready...",
+        btn_start: "🥁 Start",
+        btn_pick: "✅ Pick & Remove",
+
+        catch_title: "🧸 Claw Machine",
+        catch_insert: "Insert Coin...",
+        catch_got: "Gotcha!",
+        catch_count: "Count:",
+        btn_catch: "🎣 Grab!",
+        btn_clear: "🗑️ Clear",
+
+        win_title: "🏆 {g} Wins!",
+        winner_head: "Winner!",
+        btn_mark_done: "🚫 Mark Done",
+        btn_continue: "↩️ Continue",
+
+        alert_revive: "Revive all groups?",
+        alert_no_pic: "Please select an image first!",
+        alert_saved_stu: "✅ Student [{name}] saved!",
+        alert_saved_grp: "✅ Group [{name}] saved!",
+        alert_race_few: "Not enough groups left to race!",
+        alert_no_grp: "No groups left!",
+        alert_mascot_ok: "✨ Mascot updated!",
+        alert_mascot_reset: "Revert to default Panda?",
+        alert_data_ok: "✅ Data restored successfully!",
+        alert_file_err: "Invalid file format!",
+
+        "第一组": "Group 1",
+        "第二组": "Group 2",
+        "第三组": "Group 3",
+        "第四组": "Group 4",
+        "第五组": "Group 5",
+        "组长": "Leader"
+    }
+};
+
+let curLang = localStorage.getItem('4M_Lang') || 'zh';
+const mascotPhrases = {
+    zh: ["今天也要加油鸭！💪", "谁是今天的幸运儿？🎲", "老师，作业太难啦！😫", "保持安静，专心听讲哦！🤫", "4M班是最棒的！🏆", "别戳我，我有肉肉！🥩", "记得多喝水哦~ 🥤", "冲鸭！第一名！🚀"],
+    en: ["Do your best today! 💪", "Who is lucky today? 🎲", "Homework is hard! 😫", "Stay focused! 🤫", "4M is the best! 🏆", "Don't poke me! 🥩", "Drink more water~ 🥤", "Go go go! 🚀"]
+};
+
+function t(key) { return translations[curLang][key] || key; }
+
+function toggleLang() {
+    curLang = curLang === 'zh' ? 'en' : 'zh';
+    localStorage.setItem('4M_Lang', curLang);
+    updateUI();
+}
+
+function updateUI() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.innerText = t(el.getAttribute('data-i18n'));
+    });
+    document.getElementById('mainTitle').innerText = t('title');
+    const btn = document.getElementById('langBtn');
+    btn.innerText = curLang === 'zh' ? "🌐 中/EN" : "🌐 EN/中";
+    renderHome();
+    renderRace();
+    document.getElementById('mascot-bubble').innerText = curLang === 'zh' ? "你好呀！" : "Hello!";
+}
+
+// ==========================
+// 🔊 双保险音效系统
+// ==========================
+const Sound = {
+  ctx: null,
+  init: function() {
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    this.ctx = new AudioContext();
+  },
+  play: function(id, synthFreq, synthType='sine') {
+    if(!isMusicOn) return;
+    const audioEl = document.getElementById('audio-' + id);
+    if(audioEl && audioEl.readyState >= 2) { 
+         audioEl.currentTime = 0;
+        const playPromise = audioEl.play();
+        if(playPromise !== undefined) {
+            playPromise.catch(error => { this.playTone(synthFreq, synthType, 0.1); });
+        }
+    } else {
+        this.playTone(synthFreq, synthType, 0.1);
+    }
+  },
+  playTone: function(freq, type, duration) {
+    if(!this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+    osc.start();
+    osc.stop(this.ctx.currentTime + duration);
+  },
+  click: function() { this.play('click', 800); },
+  drum: function() { this.play('click', 150, 'square'); }, 
+  race: function() { this.play('race', 200, 'sawtooth'); },
+  victory: function() { 
+      if(!document.getElementById('audio-win').readyState) { 
+         [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.playTone(f, 'triangle', 0.2), i*150));
+      } else { 
+         this.play('win', 0); 
+      }
+  },
+  bgm: function(play) {
+      const el = document.getElementById('audio-bgm');
+      if(el) { if(play) el.play().catch(e=>{}); else el.pause(); }
+  }
+};
+
+let isMusicOn = false;
+function toggleMusic() {
+  isMusicOn = !isMusicOn;
+  const btn = document.getElementById('musicBtn');
+  if(isMusicOn) {
+      Sound.init();
+      btn.innerText = "🎵";
+      btn.classList.add('music-playing');
+      Sound.click();
+      Sound.bgm(true);
+  } else {
+      btn.innerText = "🔇";
+      btn.classList.remove('music-playing');
+      Sound.bgm(false);
+  }
+}
+
+// ==========================
+// 🐼 全局数据 & 初始化
+// ==========================
+const groupData = {
+  "第一组": ["朱定乐 (组长)", "伯乐良", "蔡美星", "达力思", "温彦琦"],
+  "第二组": ["庄发宝 (组长)", "拉菲之", "伊欧玟", "张桄瑞", "祖哈依菈"],
+  "第三组": ["肯迪丽 (组长)", "莱恩", "阿维安娜", "丁尼生", "诺恺汝"],
+  "第四组": ["黄彦蒽 (组长)", "陈文华", "郑全宏", "祖尔", "温馨儿"],
+  "第五组": ["吴晞雯 (组长)", "罗仁斯", "希尔曼", "范倪莎", "陈晟宥"]
+};
+
+let avatars = JSON.parse(localStorage.getItem('4M_Avatars_Pro') || '{}');
+let groupAvatars = JSON.parse(localStorage.getItem('4M_Grp_Avatars_Pro') || '{}');
+let usedGroups = JSON.parse(localStorage.getItem('4M_Used_Pro') || '[]');
+let currentMode = 'student'; 
+let timer = null;
+let tempWinner = null;
+let allStudents = [];
+
+// 初始化
+Object.values(groupData).forEach(arr => arr.forEach(s => allStudents.push(s.split(" (")[0])));
+initSelects();
+updateUI(); 
+setTimeout(loadMascot, 500);
+
+// ==========================
+// 🎨 辅助功能
+// ==========================
+function getAvatar(name) {
+  if(avatars[name]) return avatars[name];
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffdfbf,ffd5dc`;
+}
+function getGroupAvatar(gName) {
+  if(groupAvatars[gName]) return groupAvatars[gName];
+  return `https://api.dicebear.com/9.x/icons/svg?seed=${gName}&icon=star,shield,crown,trophy,heart`;
+}
+function showPage(pid, btn) {
+  Sound.click();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pid).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-btn'));
+  btn.classList.add('active-btn');
+  clearInterval(timer);
+}
+
+// ==========================
+// 🏠 首页
+// ==========================
+function renderHome() {
+  const div = document.getElementById('groupView');
+  div.innerHTML = '';
+  for(let g in groupData) {
+    const isUsed = usedGroups.includes(g);
+    const dispName = t(g);
+    
+    let html = `<div class="group-card" style="${isUsed?'opacity:0.6;filter:grayscale(1)':''}">
+      <div class="group-header">
+        <img src="${getGroupAvatar(g)}" class="group-badge-img"> 
+        <h3 style="margin:0">${dispName}</h3>
+      </div>
+      <div style="padding-left:10px;">`;
+    groupData[g].forEach(s => {
+      const n = s.split(' (')[0];
+      const isLeader = s.includes('组长');
+      html += `<div class="student-item">
+        <img src="${getAvatar(n)}" class="stu-avatar">
+        <span>${n} ${isLeader ? '⭐ <small>'+t('组长')+'</small>' : ''}</span>
+      </div>`;
+    });
+    div.innerHTML += html + '</div></div>';
+  }
+}
+
+function resetAll() {
+  if(confirm(t('alert_revive'))) {
+    usedGroups = [];
+    localStorage.setItem('4M_Used_Pro', JSON.stringify(usedGroups));
+    renderHome();
+    Sound.victory();
+  }
+}
+
+// ==========================
+// 📸 相机
+// ==========================
+function initSelects() {
+  const s = document.getElementById('stuSelect');
+  const g = document.getElementById('grpSelect');
+  allStudents.sort().forEach(n => s.innerHTML += `<option value="${n}">${n}</option>`);
+  Object.keys(groupData).forEach(k => g.innerHTML += `<option value="${k}">${k}</option>`);
+}
+
+function switchCamMode(mode) {
+  currentMode = mode;
+  Sound.click();
+  document.getElementById('tabStu').className = mode==='student'?'cam-tab active-tab':'cam-tab';
+  document.getElementById('tabGrp').className = mode==='group'?'cam-tab active-tab':'cam-tab';
+  document.getElementById('camModeStudent').style.display = mode==='student'?'block':'none';
+  document.getElementById('camModeGroup').style.display = mode==='group'?'block':'none';
+  document.getElementById('imgPreview').src = "";
+  document.getElementById('compressTip').style.display = 'none';
+}
+
+function handleFilePreview(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.src = e.target.result;
+      img.onload = function() {
+        const cvs = document.createElement('canvas');
+        const scale = 200 / img.width;
+        cvs.width = 200; cvs.height = img.height * scale;
+        cvs.getContext('2d').drawImage(img,0,0,cvs.width,cvs.height);
+        document.getElementById('imgPreview').src = cvs.toDataURL('image/jpeg', 0.7);
+        document.getElementById('compressTip').style.display = 'block';
+      };
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function saveCurrentAvatar() {
+  const src = document.getElementById('imgPreview').src;
+  if (!src || src.length < 100) return alert(t('alert_no_pic'));
+  
+  if (currentMode === 'student') {
+    const name = document.getElementById('stuSelect').value;
+    avatars[name] = src;
+    localStorage.setItem('4M_Avatars_Pro', JSON.stringify(avatars));
+    alert(t('alert_saved_stu').replace('{name}', name));
+  } else {
+    const gName = document.getElementById('grpSelect').value;
+    groupAvatars[gName] = src;
+    localStorage.setItem('4M_Grp_Avatars_Pro', JSON.stringify(groupAvatars));
+    alert(t('alert_saved_grp').replace('{name}', gName));
+  }
+  Sound.victory();
+  renderHome();
+  renderRace();
+}
+
+// ==========================
+// 🏎️ 赛车
+// ==========================
+function renderRace() {
+  const tArea = document.getElementById('raceTrackArea');
+  if(!tArea) return;
+  tArea.innerHTML = '';
+  Object.keys(groupData).forEach(g => {
+    if(usedGroups.includes(g)) return;
+    let icon = groupAvatars[g] || getGroupAvatar(g);
+    tArea.innerHTML += `
+      <div class="race-lane">
+        <div style="position:absolute; right:10px; height:100%; border-right:5px dotted red; opacity:0.5;"></div>
+        <div class="racer-icon" id="car-${g}">
+          <img src="${icon}" class="racer-img">
+          <span style="font-size:12px; background:white; padding:0 2px; border:1px solid #333; margin-top:-8px; z-index:3;">${t(g)}</span>
+        </div>
+      </div>`;
+  });
+}
+
+function startRace() {
+  const active = Object.keys(groupData).filter(g => !usedGroups.includes(g));
+  if(active.length < 2) return alert(t('alert_race_few'));
+  Sound.race();
+  const pos = {}; active.forEach(g => pos[g]=0);
+  const finish = document.getElementById('raceTrackArea').offsetWidth - 80;
+  
+  timer = setInterval(() => {
+    let winner = null;
+    active.forEach(g => {
+      pos[g] += Math.random()*15 + 2;
+      document.getElementById(`car-${g}`).style.left = pos[g]+'px';
+      if(pos[g] >= finish && !winner) winner = g;
+    });
+    if(winner) { clearInterval(timer); showWinner(winner); }
+  }, 80);
+}
+
+// ==========================
+// 🧧 抽签
+// ==========================
+function startDraw() {
+  const active = Object.keys(groupData).filter(g => !usedGroups.includes(g));
+  if(!active.length) return alert(t('alert_no_grp'));
+  
+  let count = 0;
+  document.getElementById('drawText').innerText = t('draw_ready');
+  
+  timer = setInterval(() => {
+    Sound.drum();
+    const g = active[Math.floor(Math.random()*active.length)];
+    const icon = groupAvatars[g] || getGroupAvatar(g);
+    document.getElementById('drawIcon').innerHTML = `<img src="${icon}" style="width:100px; height:100px; border-radius:50%; border:5px solid var(--cute-pink);">`;
+    document.getElementById('drawText').innerText = t(g);
+    
+    if(++count > 20) {
+      clearInterval(timer);
+      tempWinner = g;
+      document.getElementById('drawText').innerHTML = `🎉 <span style="color:red">${t(g)}</span>`;
+      const list = document.getElementById('drawMembers'); list.innerHTML = '';
+      groupData[g].forEach(s => {
+        const n = s.split(' (')[0];
+        list.innerHTML += `<div style="text-align:center"><img src="${getAvatar(n)}" style="width:50px;height:50px;border-radius:50%;"><br><small>${n}</small></div>`;
+      });
+      showWinner(g);
+    }
+  }, 100);
+}
+
+function confirmExclude() {
+  if(tempWinner) {
+    usedGroups.push(tempWinner);
+    localStorage.setItem('4M_Used_Pro', JSON.stringify(usedGroups));
+    renderHome();
+    closeWinner(false);
+  }
+}
+
+// ==========================
+// 🧸 抓娃娃
+// ==========================
+function startCatch() {
+  const pool = [];
+  Object.values(groupData).forEach(arr => arr.forEach(s => pool.push(s.split(" (")[0])));
+  if(!pool.length) return;
+  const img = document.getElementById('catchPreview');
+  const txt = document.getElementById('catchText');
+  img.style.display = 'block';
+  document.getElementById('catchResult').innerHTML = '';
+  
+  let step = 0;
+  timer = setInterval(() => {
+    Sound.click();
+    const s = pool[Math.floor(Math.random()*pool.length)];
+    img.src = getAvatar(s);
+    txt.innerText = s;
+    if(++step > 20) {
+      clearInterval(timer);
+      Sound.victory();
+      const num = document.getElementById('catchCount').value;
+      for(let i=0; i<num; i++){
+        const lucky = pool.splice(Math.floor(Math.random()*pool.length), 1)[0];
+        if(lucky) document.getElementById('catchResult').innerHTML += `
+          <div style="text-align:center; animation:popIn 0.5s;">
+             <img src="${getAvatar(lucky)}" style="width:80px;height:80px;border-radius:50%;border:4px solid var(--cute-pink);">
+             <div style="font-weight:bold">${lucky}</div>
+          </div>`;
+      }
+      txt.innerText = t('catch_got');
+      img.style.display = 'none';
+    }
+  }, 80);
+}
+function resetCatch() { 
+    document.getElementById('catchResult').innerHTML=''; 
+    document.getElementById('catchText').innerText = t('catch_insert');
+}
+
+// ==========================
+// 🏆 胜利与弹窗
+// ==========================
+function showWinner(g) {
+  tempWinner = g;
+  Sound.victory();
+  const p = document.getElementById('winnerPage');
+  p.style.display = 'flex';
+  document.getElementById('winTitle').innerText = t('win_title').replace('{g}', t(g));
+  
+  const d = document.getElementById('winMembers'); d.innerHTML = '';
+  const badge = groupAvatars[g] || getGroupAvatar(g);
+  d.innerHTML += `<div style="width:100%; text-align:center; margin-bottom:10px;"><img src="${badge}" style="width:100px; height:100px; border-radius:50%; border:5px solid gold;"></div>`;
+  
+  groupData[g].forEach(s => {
+    const n = s.split(' (')[0];
+    d.innerHTML += `<div style="text-align:center;"><img src="${getAvatar(n)}" style="width:60px; height:60px; border-radius:50%; border:3px solid gold;"><div style="font-size:16px; margin-top:5px;">${n}</div></div>`;
+  });
+}
+
+function closeWinner(exclude) {
+  if(exclude) confirmExclude();
+  document.getElementById('winnerPage').style.display = 'none';
+  renderRace();
+}
+
+// ==========================
+// 🐾 吉祥物
+// ==========================
+function loadMascot() {
+    const img = document.getElementById('mascot-img');
+    const saved = localStorage.getItem('4M_Mascot_Img');
+    if (saved) img.src = saved;
+    else img.src = "https://cdn-icons-png.flaticon.com/512/3069/3069172.png";
+}
+
+function uploadMascot(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = function() {
+                const cvs = document.createElement('canvas');
+                const scale = 200 / img.width;
+                cvs.width = 200; cvs.height = img.height * scale;
+                cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height);
+                const compressedData = cvs.toDataURL('image/png');
+                localStorage.setItem('4M_Mascot_Img', compressedData);
+                document.getElementById('mascot-img').src = compressedData;
+                alert(t('alert_mascot_ok'));
+            };
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function resetMascot() {
+    if(confirm(t('alert_mascot_reset'))) {
+        localStorage.removeItem('4M_Mascot_Img');
+        loadMascot();
+    }
+}
+
+let bubbleTimer = null;
+function mascotTalk() {
+    const bubble = document.getElementById('mascot-bubble');
+    const phrases = mascotPhrases[curLang];
+    const text = phrases[Math.floor(Math.random() * phrases.length)];
+    bubble.innerText = text;
+    bubble.classList.add('show');
+    Sound.click();
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => { bubble.classList.remove('show'); }, 3000);
+}
+
+// ==========================
+// 💾 数据导出 (修正版：包含吉祥物)
+// ==========================
+function exportData() {
+  // 获取所有存储在 localStorage 的数据
+  const mascotImg = localStorage.getItem('4M_Mascot_Img');
+  const diaryData = localStorage.getItem('4M_Diary');
+  
+  // 这里的 avatars, groupAvatars, usedGroups 是你代码顶部的全局变量
+  const data = { 
+      avatars, 
+      groupAvatars, 
+      usedGroups, 
+      mascotImg, 
+      diaryData 
+  };
+  
+  const a = document.createElement('a');
+  // 将对象转为 JSON 字符串并创建下载链接
+  const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+  a.href = URL.createObjectURL(blob);
+  a.download = `4M_Full_Memory_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+function importData(input) {
+function importData(input) {
+  if(!input.files[0]) return;
+  const r = new FileReader();
+  r.onload = function(e) {
+    try {
+      const d = JSON.parse(e.target.result);
+      
+      // 1. 恢复学生头像
+      if(d.avatars) {
+          avatars = d.avatars;
+          localStorage.setItem('4M_Avatars_Pro', JSON.stringify(avatars));
+      }
+      
+      // 2. 恢复小组队徽
+      if(d.groupAvatars) {
+          groupAvatars = d.groupAvatars;
+          localStorage.setItem('4M_Grp_Avatars_Pro', JSON.stringify(groupAvatars));
+      }
+      
+      // 3. 恢复已使用的组别状态
+      if(d.usedGroups) {
+          usedGroups = d.usedGroups;
+          localStorage.setItem('4M_Used_Pro', JSON.stringify(usedGroups));
+      }
+      
+      // 4. 恢复吉祥物图片
+      if(d.mascotImg) {
+          localStorage.setItem('4M_Mascot_Img', d.mascotImg);
+          if(document.getElementById('mascot-img')) {
+              document.getElementById('mascot-img').src = d.mascotImg;
+          }
+      }
+
+      // 5. 恢复日记数据 (解决你之前的问题)
+      if(d.diaryData) {
+          localStorage.setItem('4M_Diary', d.diaryData);
+      }
+      
+      alert("✅ 记忆载入成功！页面即将刷新...");
+      location.reload(); // 必须刷新，否则页面显示的还是旧数据
+      
+    } catch(err) { 
+      console.error(err);
+      alert("❌ 文件格式错误，无法读取记忆！"); 
+    }
+  };
+  r.readAsText(input.files[0]);
+}
+</script>
+</body>
+</html>
