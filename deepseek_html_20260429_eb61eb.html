@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>生字资源包 · 第1课 · 触屏优化版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            font-size: 20px;
+            -webkit-text-size-adjust: 100%;
+        }
+        body {
+            font-family: '楷体', 'KaiTi', 'Microsoft YaHei', sans-serif;
+            background: #fff7ef;
+            color: #3e2e1f;
+            padding: 0.8rem;
+            touch-action: manipulation; /* 禁止双击缩放，提升触屏体验 */
+        }
+        .app {
+            max-width: 1100px;
+            margin: auto;
+            background: #fffef8;
+            border-radius: 2rem;
+            box-shadow: 0 12px 30px rgba(160, 100, 40, 0.12);
+            overflow: hidden;
+            border: 1.5px solid #ecd9c0;
+        }
+        .nav {
+            background: #fff3e4;
+            padding: 0.6rem 1rem;
+            border-bottom: 1.5px solid #e7cfb0;
+            text-align: center;
+            font-weight: 700;
+            color: #b3582a;
+            font-size: 0.9rem;
+            letter-spacing: 0.05rem;
+        }
+        .main {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .read {
+            flex: 2;
+            background: #fff;
+            padding: 0.8rem 1.2rem;
+            border-right: 1.5px solid #f0e3cf;
+            max-height: 80vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+            position: relative;
+        }
+        .panel {
+            flex: 1;
+            background: #fffcf5;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 80vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #b85c28;
+            border-left: 6px solid #e0a06e;
+            padding-left: 0.8rem;
+            margin-bottom: 0.4rem;
+        }
+        /* 缩放控件（紧凑版） */
+        .zoom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+            background: #fffdf7;
+            padding: 0.2rem 0.4rem;
+            border: 1.5px solid #f0e3cf;
+            border-radius: 1.2rem;
+            margin-bottom: 0.6rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-size: 0.7rem;
+        }
+        .zoom-btn {
+            background: #f5e1cc;
+            border: none;
+            width: 1.6rem;
+            height: 1.6rem;
+            border-radius: 50%;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #8b4a20;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s;
+        }
+        .zoom-btn:active {
+            background: #d9944c;
+            color: #fff;
+        }
+        #zoomSlider {
+            width: 80px;
+            accent-color: #d9944c;
+            height: 0.4rem;
+        }
+        #zoomPercent {
+            font-weight: 700;
+            color: #b3582a;
+            min-width: 2.2rem;
+            text-align: center;
+            font-size: 0.7rem;
+        }
+        /* 课文段落样式 */
+        .text p {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.4rem;
+            word-break: break-word;
+        }
+        /* 生字高亮 */
+        .char {
+            color: #c0392b;
+            font-weight: 700;
+            background: #fff1e6;
+            border-radius: 5px;
+            padding: 2px 6px;
+            cursor: pointer;
+            border-bottom: 1.5px dashed #e0a080;
+            transition: all 0.2s;
+            display: inline-block;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .char:active {
+            background: #f8c090;
+            transform: scale(0.97);
+        }
+        /* 句子高亮 */
+        .sentence {
+            transition: background 0.3s;
+            padding: 2px 0;
+            border-radius: 4px;
+        }
+        .sentence.hilite {
+            background: #fff3c4 !important;
+            border-left: 3px solid #f0a040;
+            padding-left: 6px;
+            display: block; /* 让句子块状显示，便于高亮 */
+        }
+        /* 右侧卡片 */
+        .card {
+            background: #fff;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            border: 1.5px solid #f2ddc2;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+        .card h3 {
+            font-size: 1rem;
+            color: #9b4b2a;
+            margin-bottom: 0.6rem;
+        }
+        .detail-item {
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .detail-label {
+            font-weight: 700;
+            color: #8b5a34;
+            min-width: 50px;
+        }
+        .audio-btn,
+        .ex-btn {
+            background: #f5e1cc;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #8b4a20;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            min-width: 44px;
+            min-height: 44px; /* 触屏友好尺寸 */
+        }
+        .audio-btn:active,
+        .ex-btn:active {
+            background: #d9944c;
+            color: #fff;
+        }
+        /* 词汇标签 */
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+        .badge {
+            background: #fffaf3;
+            border: 1px solid #e8cfb0;
+            border-radius: 1.2rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #b0552c;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+        }
+        .badge:active {
+            background: #ffe0cc;
+            transform: scale(0.96);
+        }
+        footer {
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.7rem;
+            color: #b59570;
+            border-top: 1px solid #f0e3d2;
+        }
+        @media (max-width: 800px) {
+            .main {
+                flex-direction: column;
+            }
+            .read {
+                border-right: none;
+                max-height: none;
+            }
+            .panel {
+                max-height: none;
+            }
+            .char {
+                padding: 4px 8px; /* 移动端增大点击区域 */
+            }
+            .zoom-btn {
+                width: 2rem;
+                height: 2rem;
+                font-size: 1.2rem;
+            }
+            #zoomSlider {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="nav">📚 第1课 · 踏上学习的征途</div>
+        <div class="main">
+            <div class="read" id="readContainer">
+                <div class="title">📖 踏上学习的征途</div>
+                <!-- 缩放控件：紧凑、不遮挡 -->
+                <div class="zoom-bar">
+                    <button class="zoom-btn" id="zoomOut" title="缩小">−</button>
+                    <input type="range" id="zoomSlider" min="50" max="200" value="100" step="5">
+                    <button class="zoom-btn" id="zoomIn" title="放大">+</button>
+                    <span id="zoomPercent">100%</span>
+                </div>
+                <div id="story" class="text"></div>
+            </div>
+            <div class="panel">
+                <div class="card">
+                    <h3>📖 生字详解</h3>
+                    <div id="detail"></div>
+                </div>
+                <div class="card">
+                    <h3>📚 词汇</h3>
+                    <div class="badges" id="wordlist"></div>
+                </div>
+            </div>
+        </div>
+        <footer>🍃 四年级华文生字学习 · 点击生字听读音 · 例句定位</footer>
+    </div>
+
+    <script>
+        // ======================== 第1课完整数据 ========================
+        const courseData = {
+            id: 1,
+            title: "踏上学习的征途",
+            paragraphs: [
+                "在通明的灯光下，我打开未完成的英文作业。我看着摊在眼前的字母，仿佛看见千千万万只横行的螃蟹，正张牙舞爪地向我爬来，心里没来由的沉重，别说思考，就连提笔也没劲儿。",
+                "这个时候，一只不识相的蚊子飞过来叮咬我。\"啪\"的一声，我狠狠地往手臂打去，蚊子机灵地飞走了，手臂上倒是留下一个手印。血红血红的掌印，像极了成绩册里英文科的分数。刺眼的红色，不断地在我眼里扩大、扩大……可恶的蚊子又飞过来了，忽高忽低，忽近忽远，似乎在向我叫嚣。我拿起电蚊拍，扑上扑下地追打蚊子，却怎么也打不着，我心里又急又气，眼泪迅速夺眶而出。",
+                "妈妈等我哭够了、气消了才递给我一本书，一行烫金字跃入眼帘——《一代风范李光前》。这是一本生动的画册，述说着华人企业家、教育家和慈善家——李光前先生的奋斗史。",
+                "李光前在10岁那年跟着父亲搬迁到新加坡谋生。因为家境不好，只好报读专收穷苦印度学童的学校。一群穷孩子很快打成一片，他用英语和淡米尔语跟同学沟通；周末时，他坚持学习中文，立志长大后要干一番大事业。",
+                "19岁那年，他白天教书，晚上为华文报翻译电讯稿，过着左手打蚊子，右手写稿的日子。虽然常常被蚊子叮咬，他却不当一回事。",
+                "看到这里，我顿时明白了妈妈的用意。我英文不好，并不是我天资不好，而是我毅力不足，不够刻苦学习。当下，我立下志愿，要向先贤看齐，学习他在艰苦的条件下坚持学习的精神。",
+                "你是否也跟我一样，视英文为洪水猛兽，正烦恼着如何搞好英文？古往今来，\"世上无难事，只怕有心人\"是鼓励人们向上的最佳座右铭，证明了顽强的毅力可征服世界。",
+                "一只蚊子，不过是十几毫米大的小东西，打蚊子所留下的血红巴掌印，让我明了遇到挫折时不要逃避，要找出问题根源，以不怕吃苦的精神乐观面对，就一定能够换取成功的喜悦。"
+            ],
+            words: [
+                { char: "劲", pinyin: "jìn", radical: "力", vocab: "没劲儿", meaning: "没有力气" },
+                { char: "迅", pinyin: "xùn", radical: "辶", vocab: "迅速", meaning: "非常快" },
+                { char: "速", pinyin: "sù", radical: "辶", vocab: "迅速", meaning: "非常快" },
+                { char: "递", pinyin: "dì", radical: "辶", vocab: "递给", meaning: "拿给" },
+                { char: "跃", pinyin: "yuè", radical: "足", vocab: "跃入", meaning: "跳进" },
+                { char: "范", pinyin: "fàn", radical: "艹", vocab: "风范", meaning: "风格和榜样" },
+                { char: "企", pinyin: "qǐ", radical: "人", vocab: "企业家", meaning: "创办和经营企业的人" },
+                { char: "奋", pinyin: "fèn", radical: "大", vocab: "奋斗", meaning: "为达到目标而努力" },
+                { char: "史", pinyin: "shǐ", radical: "丨", vocab: "奋斗史", meaning: "个人努力拼搏的经历" },
+                { char: "迁", pinyin: "qiān", radical: "辶", vocab: "搬迁", meaning: "搬到别的地方去" },
+                { char: "沟", pinyin: "gōu", radical: "氵", vocab: "沟通", meaning: "彼此交流，使心意相通" },
+                { char: "艰", pinyin: "jiān", radical: "艮", vocab: "艰苦", meaning: "艰难困苦" },
+                { char: "搞", pinyin: "gǎo", radical: "扌", vocab: "搞好", meaning: "把东西做好" },
+                { char: "源", pinyin: "yuán", radical: "氵", vocab: "根源", meaning: "事情发生的根本原因" },
+                { char: "悦", pinyin: "yuè", radical: "忄", vocab: "喜悦", meaning: "愉快，高兴" }
+            ]
+        };
+
+        // ======================== 初始化 DOM 引用 ========================
+        const storyEl = document.getElementById('story');
+        const detailEl = document.getElementById('detail');
+        const wordlistEl = document.getElementById('wordlist');
+        const readContainer = document.getElementById('readContainer');
+        const zoomSlider = document.getElementById('zoomSlider');
+        const zoomPercent = document.getElementById('zoomPercent');
+
+        let currentWord = courseData.words[0];
+
+        // ======================== 语音朗读 ========================
+        let speech = null;
+        function speak(text) {
+            if (speech) speechSynthesis.cancel();
+            speech = new SpeechSynthesisUtterance(text);
+            speech.lang = 'zh-CN';
+            speech.rate = 0.8;
+            speechSynthesis.speak(speech);
+        }
+
+        // ======================== 缩放功能 ========================
+        function applyZoom(val) {
+            readContainer.style.zoom = val / 100;
+            zoomPercent.textContent = val + '%';
+        }
+        zoomSlider.addEventListener('input', () => applyZoom(zoomSlider.value));
+        document.getElementById('zoomOut').addEventListener('click', () => {
+            zoomSlider.value = Math.max(50, parseInt(zoomSlider.value) - 10);
+            applyZoom(zoomSlider.value);
+        });
+        document.getElementById('zoomIn').addEventListener('click', () => {
+            zoomSlider.value = Math.min(200, parseInt(zoomSlider.value) + 10);
+            applyZoom(zoomSlider.value);
+        });
+
+        // ======================== 将段落拆分为句子 ========================
+        function splitSentences(paragraph) {
+            // 使用正则匹配句子：以 。！？…… 结尾，保留分隔符
+            const sentences = paragraph.match(/[^。！？……]+[。！？……]?/g);
+            return sentences || [paragraph];
+        }
+
+        // ======================== 渲染课文（句子级别） ========================
+        function renderStory() {
+            let html = '';
+            courseData.paragraphs.forEach((para, pIndex) => {
+                const sentences = splitSentences(para);
+                const sentencesHtml = sentences.map(sentence => {
+                    // 替换句子中的生字为 span.char
+                    let processed = sentence.replace(/[\u4e00-\u9fa5]/g, (char) => {
+                        if (courseData.words.some(w => w.char === char)) {
+                            return `<span class="char" data-char="${char}">${char}</span>`;
+                        }
+                        return char;
+                    });
+                    return `<span class="sentence">${processed}</span>`;
+                }).join('');
+                html += `<p data-para="${pIndex}">${sentencesHtml}</p>`;
+            });
+            storyEl.innerHTML = html;
+
+            // 绑定生字点击事件
+            storyEl.querySelectorAll('.char').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const char = el.dataset.char;
+                    const word = courseData.words.find(w => w.char === char);
+                    if (word) {
+                        speak(word.char);          // 朗读单字
+                        showDetail(word);
+                        highlightSentence(el);     // 高亮该字所在的句子
+                    }
+                });
+            });
+        }
+
+        // ======================== 高亮生字所在的句子 ========================
+        function highlightSentence(charElement) {
+            // 移除所有高亮
+            document.querySelectorAll('.sentence.hilite').forEach(s => s.classList.remove('hilite'));
+            // 找到包含点击元素的最近 .sentence
+            const sentenceSpan = charElement.closest('.sentence');
+            if (sentenceSpan) {
+                sentenceSpan.classList.add('hilite');
+                // 平滑滚动到句子位置，避免被顶栏遮挡
+                sentenceSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // ======================== 根据生字对象高亮对应句子（例句按钮用） ========================
+        function highlightSentenceByWord(word) {
+            document.querySelectorAll('.sentence.hilite').forEach(s => s.classList.remove('hilite'));
+            // 在所有句子中寻找包含该生字的第一个句子
+            const allSentences = storyEl.querySelectorAll('.sentence');
+            for (let sentenceSpan of allSentences) {
+                if (sentenceSpan.textContent.includes(word.char)) {
+                    sentenceSpan.classList.add('hilite');
+                    sentenceSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    break;
+                }
+            }
+        }
+
+        // ======================== 显示生字详解 ========================
+        function showDetail(w) {
+            currentWord = w;
+            detailEl.innerHTML = `
+                <div style="font-size:1.6rem;font-weight:800;color:#a0401a;margin-bottom:0.4rem;">
+                    ${w.char}
+                    <button class="audio-btn" id="audioBtn">🔊 词汇</button>
+                </div>
+                <div class="detail-item"><span class="detail-label">拼音：</span>${w.pinyin}</div>
+                <div class="detail-item"><span class="detail-label">部首：</span>${w.radical}</div>
+                <div class="detail-item"><span class="detail-label">词汇：</span>${w.vocab}</div>
+                <div class="detail-item"><span class="detail-label">意思：</span>${w.meaning}</div>
+                <button class="ex-btn" id="exBtn">📖 课文例句</button>
+            `;
+
+            document.getElementById('audioBtn').addEventListener('click', () => speak(w.vocab));
+            document.getElementById('exBtn').addEventListener('click', () => {
+                highlightSentenceByWord(w);
+            });
+        }
+
+        // ======================== 渲染词汇栏 ========================
+        function renderWordlist() {
+            wordlistEl.innerHTML = '';
+            courseData.words.forEach(w => {
+                const badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.textContent = w.char + ' ' + w.vocab;
+                badge.addEventListener('click', () => {
+                    speak(w.vocab);
+                    showDetail(w);
+                    highlightSentenceByWord(w);
+                });
+                wordlistEl.appendChild(badge);
+            });
+        }
+
+        // ======================== 初始启动 ========================
+        renderStory();
+        renderWordlist();
+        showDetail(courseData.words[0]);
+    </script>
+</body>
+</html>
